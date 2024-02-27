@@ -11,7 +11,7 @@ onmessage = async function (e) {
     Atomics.add(sharedArray, index, 500);
     const updatedValue = Atomics.load(sharedArray, index);
     postMessage(`Updated value is ${updatedValue}`);
-  } catch (err) {
+  } catch (err: any) {
     console.error(`Worker: An error occurred with waitAsync: ${err.message}`);
   }
 };

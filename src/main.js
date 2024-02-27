@@ -3,25 +3,26 @@ console.log("Main thread starting.");
 
 const path = "/src";
 
+// SharedArrayBufferを作成
 const sharedBuffer = new SharedArrayBuffer(1024);
 const sharedArray = new Int32Array(sharedBuffer);
 
-// 待機中のワーカー
-const workerWait = new Worker(`${path}/atomics-wait.js`);
-const workerWaitAsync = new Worker(`${path}/atomics-wait-async.js`);
+// Workerのインスタンスを作成
+const workerWait = new Worker(`${path}/atomics-wait.worker.ts`);
+const workerWaitAsync = new Worker(`${path}/atomics-wait-async.worker.ts`);
+const workerSignalSender = new Worker(`${path}/signal-sender.worker.ts`);
 
-// シグナルを送るワーカー
-const workerSignalSender = new Worker(`${path}/signal-sender.js`);
+// SharedArrayBufferをWorkerに送信
+workerWait.postMessage(sharedBuffer);
+workerWaitAsync.postMessage(sharedBuffer);
+workerSignalSender.postMessage(sharedBuffer);
 
-// ワーカーに SharedArrayBuffer を投稿
-workerWait.postMessage(sharedArray.buffer);
-workerWaitAsync.postMessage(sharedArray.buffer);
-workerSignalSender.postMessage(sharedArray.buffer);
-
-workerWaitAsync.onmessage = function (e) {
+// workerWaitAsyncからのメッセージを受け取るイベントハンドラ
+workerWaitAsync.onmessage = (e) => {
   console.log(`Main thread received: ${e.data}`);
 };
 
+// 一定時間後にsharedArrayから値を読み出す
 setTimeout(() => {
   console.log("Here are the final values: ", Atomics.load(sharedArray, 0));
 }, 2000);
