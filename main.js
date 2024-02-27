@@ -1,18 +1,8 @@
-// メインスレッド (main.js)
+// Main thread code
+console.log("Main thread starting.");
 
-// SharedArrayBufferの作成 (1つの要素を持つInt32Array)
-const sharedArray = new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT);
+// Example of posting a message to a worker
+const worker = new Worker("array-buffer.js");
+worker.postMessage("Hello, worker!");
 
-// Workerを作成
-const worker1 = new Worker("worker-script.js");
-const worker2 = new Worker("worker-script-2.js");
-
-// SharedArrayBufferをWorkerに渡す
-worker1.postMessage(sharedArray);
-worker2.postMessage(sharedArray);
-
-// 結果を確認するためのログを出力
-setTimeout(() => {
-  const resultArray = new Int32Array(sharedArray);
-  console.log("Final value:", resultArray[0]);
-}, 1000);
+// Add more code to interact with other workers and perform other main thread duties
