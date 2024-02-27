@@ -8,9 +8,15 @@ const sharedBuffer = new SharedArrayBuffer(1024);
 const sharedArray = new Int32Array(sharedBuffer);
 
 // Workerのインスタンスを作成
-const workerWait = new Worker(`${path}/atomics-wait.worker.ts`);
-const workerWaitAsync = new Worker(`${path}/atomics-wait-async.worker.ts`);
-const workerSignalSender = new Worker(`${path}/signal-sender.worker.ts`);
+const workerWait = new Worker(
+  new URL("./atomics-wait.worker.ts", import.meta.url),
+);
+const workerWaitAsync = new Worker(
+  new URL("./atomics-wait-async.worker.ts", import.meta.url),
+);
+const workerSignalSender = new Worker(
+  new URL("./signal-sender.worker.ts", import.meta.url),
+);
 
 // SharedArrayBufferをWorkerに送信
 workerWait.postMessage(sharedBuffer);
