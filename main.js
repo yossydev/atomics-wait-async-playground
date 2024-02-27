@@ -1,16 +1,18 @@
-// SharedArrayBufferを作成
-const sharedBuffer = new SharedArrayBuffer(1024); // 1KBの共有メモリ
-const sharedArray = new Int32Array(sharedBuffer); // Int32Arrayを介してアクセス
+// メインスレッド (main.js)
 
-// ワーカースクリプトを起動
-const worker = new Worker("worker-script.js");
+// SharedArrayBufferの作成 (1つの要素を持つInt32Array)
+const sharedArray = new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT);
 
-// SharedArrayBufferをワーカーに送信
-worker.postMessage(sharedBuffer);
+// Workerを作成
+const worker1 = new Worker("worker-script.js");
+const worker2 = new Worker("worker-script-2.js");
 
-// ワーカーからのメッセージを受け取る
-worker.onmessage = function (e) {
-  console.log("メインスクリプト受信:", e.data);
-  // バッファの内容を確認（例えば、先頭の要素をログに出力）
-  console.log("SharedArrayの先頭の値:", sharedArray[0]);
-};
+// SharedArrayBufferをWorkerに渡す
+worker1.postMessage(sharedArray);
+worker2.postMessage(sharedArray);
+
+// 結果を確認するためのログを出力
+setTimeout(() => {
+  const resultArray = new Int32Array(sharedArray);
+  console.log("Final value:", resultArray[0]);
+}, 1000);
