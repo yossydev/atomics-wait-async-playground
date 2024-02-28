@@ -3,13 +3,11 @@ onmessage = function (e) {
   console.log("Worker: Waiting for the signal...");
 
   const index = 0;
-  const expectedValue = 1;
-  Atomics.wait(sharedArray, index, expectedValue);
+  console.log(Atomics.load(sharedArray, index));
+  Atomics.wait(sharedArray, 0, 0);
 
+  console.log(`second: ${Atomics.load(sharedArray, index)}`);
   Atomics.add(sharedArray, index, 1000);
-  const updatedValue = Atomics.load(sharedArray, index);
-  console.log(
-    `Worker: Received the signal with updated value: ${updatedValue}`,
-  );
-  postMessage(`Updated value is ${updatedValue}`);
+  console.log(`third: ${Atomics.load(sharedArray, index)}`);
+  postMessage(`Final Data: ${Atomics.load(sharedArray, index)}`);
 };

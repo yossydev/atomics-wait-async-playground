@@ -1,9 +1,12 @@
 onmessage = function (e) {
   const sharedArray = new Int32Array(e.data);
 
-  const num = 1;
-  Atomics.add(sharedArray, 0, num);
-  console.log("Signal sender: add data");
-  Atomics.notify(sharedArray, 0, num);
-  console.log("Signal sender: Data updated and workers notified.");
+  let sum = 0;
+  for (let i = 0; i < 1e8; i++) {
+    sum += i;
+  }
+  console.log("first");
+  Atomics.add(sharedArray, 0, sum);
+  Atomics.notify(sharedArray, 0, 1);
+  console.log("notified");
 };
