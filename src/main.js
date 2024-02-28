@@ -20,7 +20,7 @@ const workerSignalSender = new Worker(
 
 // SharedArrayBufferをWorkerに送信
 workerWait.postMessage(sharedBuffer);
-workerWaitAsync.postMessage(sharedBuffer);
+// workerWaitAsync.postMessage(sharedBuffer);
 workerSignalSender.postMessage(sharedBuffer);
 
 // workerWaitAsyncからのメッセージを受け取るイベントハンドラ
